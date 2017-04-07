@@ -51,6 +51,9 @@ export function getFeedData(user, cb) {
   emulateServerReturn(feedData, cb);
 }
 
+/**
+ * Adds a new status update to the database.
+ */
 export function postStatusUpdate(user, location, contents, cb) {
   // If we were implementing this for real on an actual server, we would check
   // that the user ID is correct & matches the authenticated user. But since
@@ -88,6 +91,7 @@ export function postStatusUpdate(user, location, contents, cb) {
   emulateServerReturn(newStatusUpdate, cb);
 }
 
+
 /**
  * Adds a new comment to the database on the given feed item.
  * Returns the updated FeedItem object.
@@ -99,6 +103,7 @@ export function postComment(feedItemId, author, contents, cb) {
   // document in the database.
   var feedItem = readDocument('feedItems', feedItemId);
   feedItem.comments.push({
+    "likeCounter": [],
     "author": author,
     "contents": contents,
     "postDate": new Date().getTime()
@@ -142,4 +147,24 @@ export function unlikeFeedItem(feedItemId, userId, cb) {
   }
   // Return a resolved version of the likeCounter
   emulateServerReturn(feedItem.likeCounter.map((userId) => readDocument('users', userId)), cb);
+}
+
+
+export function likeComment(feedItemId, userId, commentId, cb) {
+  var feedItem = readDocument('feedItems', feedItemId);
+  feedItem.comments[commentId].likeCounter.push(userId)
+  writeDocument('feedItems', feedItem);
+  emulateServerReturn(feedItem.comments[commentId].likeCounter, cb);
+}
+
+
+export function unlikeComment(feedItemId, userId, commentId, cb) {
+  var feedItem = readDocument('feedItems', feedItemId);
+  var userIndex = feedItem.comments[commentId].likeCounter.indexOf(userId);
+  if (userIndex !== -1) {
+    // 'splice' removes items from an array. This removes 1 element starting from userIndex.
+    feedItem.comments[commentId].likeCounter.splice(userIndex, 1);
+    writeDocument('feedItems', feedItem);
+  }
+  emulateServerReturn(feedItem.comments[commentId].likeCounter, cb);
 }

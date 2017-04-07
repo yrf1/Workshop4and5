@@ -2,7 +2,7 @@ import React from 'react';
 import StatusUpdate from './statusupdate';
 import CommentThread from './commentthread';
 import Comment from './comment';
-import {postComment,likeFeedItem,unlikeFeedItem} from '../server';
+import {postComment, likeFeedItem, unlikeFeedItem} from '../server.js';
 
 export default class FeedItem extends React.Component {
   constructor(props) {
@@ -20,8 +20,8 @@ export default class FeedItem extends React.Component {
   }
 
   /**
-    * Triggered when the user clicks on the 'like' or 'unlike' button.
-    */
+   * Triggered when the user clicks on the 'like' or 'unlike' button.
+   */
   handleLikeClick(clickEvent) {
     // Stop the event from propagating up the DOM tree, since we handle it here.
     // Also prevents the link click from causing the page to scroll to the top.
@@ -67,7 +67,6 @@ export default class FeedItem extends React.Component {
   }
 
   render() {
-    // The rest of this method is unchanged
     var data = this.state;
     var contents;
     var likeButtonText = "Like";
@@ -76,9 +75,6 @@ export default class FeedItem extends React.Component {
     }
     switch(data.type) {
       case "statusUpdate":
-        // Create a StatusUpdate. Dynamically created React component: needs a key.
-        // Keys only need to be unique among *siblings*, so we can re-use the
-        // same key as the FeedItem.
         contents = (
           <StatusUpdate key={data._id} author={data.contents.author} postDate={data.contents.postDate} location={data.contents.location}>
             {data.contents.contents.split("\n").map((line, i) => {
@@ -127,9 +123,8 @@ export default class FeedItem extends React.Component {
           <CommentThread onPost={(commentText) => this.handleCommentPost(commentText)}>
             {
               data.comments.map((comment, i) => {
-                // i is comment's index in comments array
                 return (
-                  <Comment key={i} author={comment.author} postDate={comment.postDate}>{comment.contents}</Comment>
+                  <Comment key={i} ind={i} feed={data._id} data={comment}>{comment.contents}</Comment>
                 );
               })
             }

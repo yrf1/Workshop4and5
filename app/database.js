@@ -1,11 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-/**
- * I added this in as part of the workshop.
- */
 var initialData = {
-  // The "user" collection. Contains all of the users in our Facebook system.
   "users": {
     // This user has id "1".
     "1": {
@@ -57,6 +53,7 @@ var initialData = {
       // List of comments on the post
       "comments": [
         {
+          "likeCounter": [],
           // The author of the comment.
           "author": 2,
           // The contents of the comment.
@@ -66,6 +63,7 @@ var initialData = {
           "postDate": 1453690800000
         },
         {
+          "likeCounter": [4],
           "author": 3,
           "contents": "sending hugs your way",
           "postDate": 1453690800000
